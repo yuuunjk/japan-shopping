@@ -1,5 +1,5 @@
 /* 일본 편의점 도감 — 오프라인에서도 도감·체크리스트가 열리도록 캐시 */
-const VERSION = "v1";
+const VERSION = "v2";
 const APP_CACHE = "japan-app-" + VERSION;
 const IMG_CACHE = "japan-img-" + VERSION;
 
