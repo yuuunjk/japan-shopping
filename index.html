@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 :root{
+  color-scheme:light;
   --bg:#f8f3ea; --card:#fffdfa; --ink:#241f1b; --ink2:#4a423a; --sub:#8a7f72;
   --line:#ece3d5; --line2:#f1e9dd;
   --red:#cf3f36; --red-dk:#a9312a; --red-soft:#fbe9e5;
@@ -114,9 +115,9 @@ main{padding:12px 12px calc(var(--nav) + var(--sab) + 22px)}
 .thumb{position:relative;background:#fff;aspect-ratio:5/4;overflow:hidden}
 .thumb img{width:100%;height:100%;object-fit:contain;padding:7px}
 .pin{
-  position:absolute;right:8px;top:8px;width:34px;height:34px;border-radius:50%;
+  position:absolute;right:7px;top:7px;width:38px;height:38px;border-radius:50%;
   background:rgba(255,255,255,.94);border:1px solid #ecdccd;color:var(--red);
-  display:grid;place-items:center;font-size:17px;font-weight:800;line-height:1;
+  display:grid;place-items:center;font-size:18px;font-weight:800;line-height:1;
   box-shadow:0 2px 8px -3px rgba(120,60,40,.45); transition:.15s; z-index:2;
 }
 .pin[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
@@ -227,7 +228,7 @@ nav.tabbar .badge.on{display:grid}
 .backdrop{position:absolute;inset:0;background:rgba(36,28,22,.42);opacity:0;transition:opacity .22s}
 .sheet-wrap.show .backdrop{opacity:1}
 .sheet{
-  position:absolute;left:0;right:0;bottom:0;max-height:94dvh;
+  position:absolute;left:0;right:0;bottom:0;max-height:94vh;max-height:94dvh;
   background:#fffdf9;border-radius:24px 24px 0 0;
   display:flex;flex-direction:column;overflow:hidden;
   transform:translateY(100%);transition:transform .26s cubic-bezier(.22,.8,.3,1);
@@ -367,6 +368,7 @@ nav.tabbar .badge.on{display:grid}
       <h3>📷 사진·가격 안내</h3>
       <p>제품 사진과 이름은 각 브랜드 공식 사이트(세븐일레븐·패밀리마트·로손·칼디커피팜·이토큐에몬·가네후쿠·이시야 등)의 실제 상품 정보에서 가져왔어요. 가격은 2026년 11월 기준 세금 포함 매장가이며, 지역·매장·시기에 따라 달라질 수 있습니다. '약'으로 표시한 가격은 대표 용량 기준입니다.</p>
       <p class="hint">오프라인에서도 열리도록 앱을 홈 화면에 추가해 두면 편해요 (삼성 인터넷 · 크롬 · 사파리 모두 지원).</p>
+      <p class="hint">v1 · 2026-11-21 · 제품 56종</p>
     </div>
   </section>
 </main>
