@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>일본 편의점 도감 · 살 것 체크</title>
+<meta name="description" content="일본 편의점·식료품·도시별 추천템 56가지. 실제 제품 사진과 일본어 이름, 가격, 먹는 팁까지. 살 것 체크리스트로 현지 쇼핑을 도와줍니다.">
+<meta name="theme-color" content="#f8f3ea">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="일본 편의점">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="app-icon-180.png">
+<link rel="icon" href="app-icon-192.png" type="image/png">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --bg:#f8f3ea; --card:#fffdfa; --ink:#241f1b; --ink2:#4a423a; --sub:#8a7f72;
+  --line:#ece3d5; --line2:#f1e9dd;
+  --red:#cf3f36; --red-dk:#a9312a; --red-soft:#fbe9e5;
+  --indigo:#2e4258; --gold:#b98a3c; --green:#3f7d5a;
+  --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
+  --nav:64px;
+  --shadow:0 1px 2px rgba(60,40,20,.05), 0 8px 20px -12px rgba(60,40,20,.28);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:
+    radial-gradient(120% 60% at 0% 0%, #fffdf7 0%, rgba(255,253,247,0) 55%),
+    radial-gradient(100% 50% at 100% 0%, #fdf3ea 0%, rgba(253,243,234,0) 60%),
+    var(--bg);
+  color:var(--ink);
+  font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif;
+  font-size:16px; line-height:1.45; letter-spacing:-.01em;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+img{display:block;max-width:100%}
+::selection{background:#f6d9c9}
+
+/* ── header ── */
+.hdr{
+  position:sticky; top:0; z-index:40;
+  padding:calc(var(--sat) + 10px) 14px 8px;
+  background:linear-gradient(180deg, rgba(255,253,247,.98) 0%, rgba(248,243,234,.96) 72%, rgba(248,243,234,.86) 100%);
+  backdrop-filter:saturate(1.4) blur(10px);
+  -webkit-backdrop-filter:saturate(1.4) blur(10px);
+  border-bottom:1px solid var(--line2);
+}
+.brand{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.brand-mark{
+  width:36px;height:36px;flex:0 0 36px;border-radius:11px;
+  background:linear-gradient(160deg,#fff6ec,#f7e3d2);
+  border:1px solid #f0dcc8; display:grid;place-items:center;font-size:19px;
+  box-shadow:0 2px 6px -3px rgba(160,90,40,.4);
+}
+.brand h1{margin:0;font-size:17px;font-weight:800;letter-spacing:-.03em;line-height:1.2}
+.brand p{margin:1px 0 0;font-size:11.5px;color:var(--sub);font-weight:600;letter-spacing:0}
+.brand p b{color:var(--red);font-weight:800}
+
+.search{position:relative;margin-bottom:9px}
+.search input{
+  width:100%;height:46px;border-radius:14px;border:1px solid var(--line);
+  background:#fff;padding:0 44px 0 40px;font-size:15px;font-weight:600;color:var(--ink);
+  outline:none;transition:border-color .15s, box-shadow .15s;
+  box-shadow:0 1px 0 rgba(120,90,60,.03);
+}
+.search input::placeholder{color:#b3a89b;font-weight:500}
+.search input:focus{border-color:#e0b7a6;box-shadow:0 0 0 3px #fbeee7}
+.search .ico{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:16px;opacity:.55;pointer-events:none}
+.search .clear{
+  position:absolute;right:7px;top:50%;transform:translateY(-50%);
+  width:32px;height:32px;border-radius:50%;display:none;place-items:center;
+  background:#f2ece3;color:#8d8175;font-size:13px;font-weight:800;
+}
+.search .clear.on{display:grid}
+
+.hdr.compact .search,.hdr.compact .chips{display:none}
+.hdr.compact{padding-bottom:10px}
+.chips{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:2px 0}
+.chips::-webkit-scrollbar{display:none}
+.chips + .chips{margin-top:6px;padding-bottom:2px}
+.chip{
+  flex:0 0 auto;height:34px;padding:0 13px;border-radius:999px;
+  border:1px solid var(--line);background:#fffdf9;color:var(--ink2);
+  font-size:13px;font-weight:700;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;
+  transition:.15s;
+}
+.chip.small{height:30px;padding:0 11px;font-size:12.5px;font-weight:600;background:#fdfaf4}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff8ef;box-shadow:0 4px 10px -6px rgba(0,0,0,.5)}
+.chip.small[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
+
+/* ── main ── */
+main{padding:12px 12px calc(var(--nav) + var(--sab) + 22px)}
+.resultbar{
+  display:flex;align-items:baseline;justify-content:space-between;
+  margin:0 2px 9px;font-size:12.5px;color:var(--sub);font-weight:600;
+}
+.resultbar b{color:var(--ink);font-weight:800}
+.resultbar .sort{font-size:12px;color:var(--indigo);font-weight:700}
+
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.card{
+  position:relative;background:var(--card);border:1px solid var(--line2);border-radius:18px;
+  overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.card:active{transform:scale(.985)}
+.thumb{position:relative;background:#fff;aspect-ratio:5/4;overflow:hidden}
+.thumb img{width:100%;height:100%;object-fit:contain;padding:7px}
+.pin{
+  position:absolute;right:8px;top:8px;width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,.94);border:1px solid #ecdccd;color:var(--red);
+  display:grid;place-items:center;font-size:17px;font-weight:800;line-height:1;
+  box-shadow:0 2px 8px -3px rgba(120,60,40,.45); transition:.15s; z-index:2;
+}
+.pin[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
+.card .body{padding:9px 10px 10px;display:flex;flex-direction:column;gap:3px;flex:1}
+.card h3{
+  margin:0;font-size:14px;font-weight:800;line-height:1.3;letter-spacing:-.03em;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em;
+}
+.card .ja{
+  margin:0;font-size:11px;color:var(--sub);font-weight:600;line-height:1.3;
+  display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;
+  font-family:'Hiragino Sans','Yu Gothic','Noto Sans JP',sans-serif;letter-spacing:0;
+}
+.card .meta{display:flex;align-items:center;gap:5px;margin-top:auto;padding-top:5px;flex-wrap:wrap}
+.price{font-size:13.5px;font-weight:800;color:var(--red-dk);letter-spacing:-.02em}
+.tag{
+  font-size:10.5px;font-weight:700;color:var(--indigo);background:#eef2f7;
+  border-radius:6px;padding:2px 6px;white-space:nowrap;
+}
+.empty{
+  text-align:center;padding:56px 20px;color:var(--sub);
+}
+.empty .big{font-size:34px;margin-bottom:10px}
+.empty p{margin:0;font-size:14px;font-weight:600}
+
+/* ── cart ── */
+.cart-sum{
+  background:linear-gradient(140deg,#fffaf1,#fdf0e6);
+  border:1px solid #f2e0cf;border-radius:18px;padding:14px 15px;margin-bottom:14px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:var(--shadow);
+}
+.cart-sum .n{font-size:26px;font-weight:900;letter-spacing:-.04em;line-height:1}
+.cart-sum .n span{font-size:13px;font-weight:700;color:var(--sub);margin-left:4px}
+.cart-sum .tot{font-size:13px;font-weight:700;color:var(--red-dk);margin-top:4px}
+.cart-sum .clr{
+  height:36px;padding:0 12px;border-radius:11px;background:#fff;border:1px solid #ecd9c8;
+  font-size:12.5px;font-weight:700;color:#9a6a52;white-space:nowrap;
+}
+.grp{margin-bottom:16px}
+.grp h4{
+  margin:0 2px 8px;font-size:12.5px;font-weight:800;color:var(--indigo);
+  display:flex;align-items:center;gap:6px;letter-spacing:0;
+}
+.grp h4 .cnt{color:var(--sub);font-weight:700}
+.row{
+  display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line2);
+  border-radius:15px;padding:8px 10px 8px 8px;margin-bottom:8px;box-shadow:0 1px 2px rgba(60,40,20,.04);
+}
+.row .cb{
+  width:34px;height:34px;flex:0 0 34px;border-radius:11px;border:1.6px solid #dcd0c0;background:#fff;
+  display:grid;place-items:center;color:#fff;font-size:16px;font-weight:900;
+}
+.row.done .cb{background:var(--green);border-color:var(--green)}
+.row .rt{width:50px;height:50px;flex:0 0 50px;border-radius:11px;background:#fff;overflow:hidden;border:1px solid var(--line2)}
+.row .rt img{width:100%;height:100%;object-fit:contain;padding:2px}
+.row .tx{flex:1;min-width:0}
+.row .tx .k{font-size:13.5px;font-weight:800;line-height:1.25;letter-spacing:-.02em;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.row .tx .j{font-size:10.5px;color:var(--sub);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-family:'Hiragino Sans','Yu Gothic','Noto Sans JP',sans-serif;letter-spacing:0}
+.row .tx .p{font-size:12px;font-weight:800;color:var(--red-dk);margin-top:2px}
+.row.done .tx .k{text-decoration:line-through;color:#a99e91}
+.row .del{width:34px;height:34px;flex:0 0 34px;border-radius:10px;color:#b6a99a;font-size:16px;display:grid;place-items:center}
+.cart-empty{text-align:center;padding:52px 20px}
+.cart-note{text-align:center;font-size:11.5px;color:#a99d8f;font-weight:600;margin:14px 0 4px;line-height:1.5}
+.cart-empty .big{font-size:40px;margin-bottom:12px}
+.cart-empty p{margin:0 0 16px;font-size:14px;color:var(--sub);font-weight:600;line-height:1.6}
+.btn-primary{
+  height:48px;padding:0 22px;border-radius:14px;background:var(--red);color:#fff;
+  font-size:15px;font-weight:800;box-shadow:0 8px 18px -10px rgba(207,63,54,.9);
+}
+
+/* ── info ── */
+.panel{background:var(--card);border:1px solid var(--line2);border-radius:18px;padding:15px;margin-bottom:12px;box-shadow:var(--shadow)}
+.panel h3{margin:0 0 10px;font-size:15px;font-weight:800;display:flex;align-items:center;gap:7px;letter-spacing:-.02em}
+.panel ul{margin:0;padding-left:0;list-style:none}
+.panel li{position:relative;padding-left:16px;font-size:13.5px;color:var(--ink2);line-height:1.65;margin-bottom:7px;font-weight:500}
+.panel li:last-child{margin-bottom:0}
+.panel li::before{content:"";position:absolute;left:2px;top:9px;width:5px;height:5px;border-radius:50%;background:#ddc6ae}
+.panel p{margin:0;font-size:13px;color:var(--sub);line-height:1.7}
+.panel .hint{font-size:12px;color:var(--sub);margin-top:8px}
+
+/* ── bottom nav ── */
+nav.tabbar{
+  position:fixed;left:0;right:0;bottom:0;z-index:45;
+  height:calc(var(--nav) + var(--sab));padding-bottom:var(--sab);
+  display:grid;grid-template-columns:repeat(3,1fr);
+  background:rgba(255,253,249,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);
+}
+nav.tabbar button{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  font-size:11px;font-weight:700;color:#a2978a;letter-spacing:-.02em;position:relative;
+}
+nav.tabbar button .e{font-size:19px;line-height:1;filter:grayscale(.4);opacity:.75;transition:.15s}
+nav.tabbar button[aria-selected="true"]{color:var(--red-dk)}
+nav.tabbar button[aria-selected="true"] .e{filter:none;opacity:1;transform:translateY(-1px)}
+nav.tabbar .badge{
+  position:absolute;top:8px;left:calc(50% + 8px);min-width:17px;height:17px;padding:0 4px;
+  border-radius:9px;background:var(--red);color:#fff;font-size:10.5px;font-weight:800;
+  display:none;place-items:center;line-height:1;box-shadow:0 0 0 2px #fffdf9;
+}
+nav.tabbar .badge.on{display:grid}
+
+/* ── sheet ── */
+.sheet-wrap{position:fixed;inset:0;z-index:80;display:none}
+.sheet-wrap.open{display:block}
+.backdrop{position:absolute;inset:0;background:rgba(36,28,22,.42);opacity:0;transition:opacity .22s}
+.sheet-wrap.show .backdrop{opacity:1}
+.sheet{
+  position:absolute;left:0;right:0;bottom:0;max-height:94dvh;
+  background:#fffdf9;border-radius:24px 24px 0 0;
+  display:flex;flex-direction:column;overflow:hidden;
+  transform:translateY(100%);transition:transform .26s cubic-bezier(.22,.8,.3,1);
+  padding-bottom:var(--sab);
+  box-shadow:0 -10px 40px -12px rgba(40,25,15,.4);
+}
+.sheet-wrap.show .sheet{transform:translateY(0)}
+.grab{width:40px;height:4px;border-radius:3px;background:#e2d6c6;margin:8px auto 0;flex:0 0 auto}
+.sheet .x{
+  position:absolute;right:10px;top:10px;width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,.92);border:1px solid var(--line);color:#7c7267;font-size:15px;font-weight:800;
+  display:grid;place-items:center;z-index:3;box-shadow:0 2px 8px -3px rgba(0,0,0,.2);
+}
+.sheet-scroll{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 12px;flex:1}
+.hero{
+  margin:4px 0 12px;border-radius:18px;overflow:hidden;background:#fff;border:1px solid var(--line2);
+  aspect-ratio:16/10;max-height:238px;display:grid;place-items:center;
+}
+.hero img{width:100%;height:100%;object-fit:contain;padding:8px}
+.sheet .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:7px}
+.sheet .tags .tg{
+  font-size:11.5px;font-weight:700;color:var(--indigo);background:#edf1f6;border-radius:7px;padding:4px 8px;
+}
+.sheet .tags .tg.cat{color:#8a4a33;background:#fbeee6}
+.sheet h2{margin:0 0 3px;font-size:19px;font-weight:800;letter-spacing:-.035em;line-height:1.3}
+.ja-big{
+  font-size:clamp(20px,5.6vw,26px);font-weight:800;line-height:1.25;letter-spacing:-.01em;
+  font-family:'Hiragino Sans','Yu Gothic','Noto Sans JP','Noto Sans KR',sans-serif;
+  background:linear-gradient(180deg,#fffdf6,#fdf4e8);border:1px solid #f0e0cc;
+  border-radius:14px;padding:12px 12px;margin:10px 0 6px;position:relative;word-break:break-word;
+}
+.ja-big .lbl{
+  display:block;font-family:'Pretendard Variable',Pretendard,sans-serif;
+  font-size:10.5px;font-weight:800;color:var(--gold);letter-spacing:.06em;margin-bottom:5px;
+}
+.ja-big{padding-right:66px}
+.ja-big .cpy{
+  position:absolute;right:8px;top:8px;height:30px;padding:0 10px;border-radius:9px;
+  background:#fff;border:1px solid #ecd9c4;font-size:11.5px;font-weight:800;color:#9a7a5c;
+  font-family:'Pretendard Variable',Pretendard,sans-serif;
+}
+.showline{font-size:11.5px;color:var(--sub);font-weight:600;margin:0 0 10px 2px}
+.price-big{font-size:20px;font-weight:900;color:var(--red-dk);letter-spacing:-.03em;margin:0 0 4px}
+.sec{margin-top:14px}
+.sec h4{
+  margin:0 0 6px;font-size:12.5px;font-weight:800;color:var(--red-dk);letter-spacing:-.02em;
+  display:flex;align-items:center;gap:6px;
+}
+.sec p{margin:0;font-size:14px;line-height:1.62;color:var(--ink2);font-weight:500}
+.sec.warn h4{color:#a1652a}
+.sec.warn{background:#fdf6ec;border-radius:13px;padding:11px 12px}
+.sheet-foot{
+  flex:0 0 auto;padding:10px 14px 12px;border-top:1px solid var(--line2);
+  background:linear-gradient(180deg,rgba(255,253,249,.7),#fffdf9);
+  display:flex;gap:9px;
+}
+.sheet-foot .add{
+  flex:1;height:52px;border-radius:15px;background:var(--red);color:#fff;font-size:15.5px;font-weight:800;
+  box-shadow:0 10px 20px -12px rgba(207,63,54,.95);display:flex;align-items:center;justify-content:center;gap:7px;
+}
+.sheet-foot .add.on{background:#eceae4;color:#7d7568;box-shadow:none}
+
+/* ── toast ── */
+.toast{
+  position:fixed;left:50%;bottom:calc(var(--nav) + var(--sab) + 14px);transform:translate(-50%,14px);
+  background:rgba(36,29,23,.94);color:#fff8ee;font-size:13px;font-weight:700;
+  padding:11px 16px;border-radius:14px;z-index:120;opacity:0;pointer-events:none;
+  transition:.22s;max-width:88vw;text-align:center;box-shadow:0 10px 24px -12px rgba(0,0,0,.7);
+}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* very narrow */
+@media (max-width:359px){
+  .grid{grid-template-columns:1fr}
+  .thumb{aspect-ratio:16/10}
+  .card h3{min-height:0}
+}
+@media (min-width:600px){
+  main{max-width:760px;margin:0 auto}
+  .hdr>.brand,.search,.chips{max-width:736px;margin-left:auto;margin-right:auto}
+  .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="brand">
+    <div class="brand-mark">🗾</div>
+    <div>
+      <h1>일본 편의점 도감</h1>
+      <p>편의점 · 브랜드 · 도시 명물 <b>56</b>가지</p>
+    </div>
+  </div>
+  <div class="search">
+    <span class="ico">🔍</span>
+    <input id="q" type="search" inputmode="search" autocomplete="off" placeholder="제품 · 매장 · 도시 검색 (한국어/일본어)" aria-label="검색">
+    <button class="clear" id="qClear" aria-label="검색어 지우기">✕</button>
+  </div>
+  <div class="chips" id="catChips" role="group" aria-label="카테고리"></div>
+  <div class="chips" id="tagChips" role="group" aria-label="도시·매장"></div>
+</header>
+
+<main>
+  <section id="view-dex">
+    <div class="resultbar"><span><b id="shown">0</b>개 보이는 중</span><span class="sort" id="sortNote">사진은 실제 제품</span></div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" hidden><div class="big">🍙</div><p>찾는 상품이 없어요.<br>다른 검색어나 필터를 써 보세요.</p></div>
+  </section>
+
+  <section id="view-cart" hidden>
+    <div class="cart-sum" id="cartSum"></div>
+    <div id="cartBody"></div>
+  </section>
+
+  <section id="view-info" hidden>
+    <div class="panel">
+      <h3>🛒 이렇게 쓰면 편해요</h3>
+      <ul>
+        <li>카드 오른쪽 위 <b>＋</b>를 누르면 '살 것'에 담겨요. 담은 것은 이 폰에만 저장돼요.</li>
+        <li>현지 매장에서 <b>살 것</b> 탭을 열고, 사면 체크하세요. 체크한 항목은 취소선이 그어집니다.</li>
+        <li>제품을 누르면 <b>일본어 이름이 크게</b> 나와요. 점원에게 화면을 보여 주면 됩니다.</li>
+        <li>일본어 이름 옆 <b>복사</b>를 누르면 검색창에 붙여 넣어 매장에서 찾기 좋아요.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>✈️ 가져가기 전 체크</h3>
+      <ul>
+        <li><b>기내 반입</b>: 액체·젤·페이스트류(스프레드·버터 등)는 100ml 이하만 기내 가능, 그 외는 위탁 수하물로 보내세요.</li>
+        <li><b>냉장·냉동</b>: 명란젓 같은 냉장 식품은 기내·위탁 모두 반입이 안 됩니다. 여행 마지막 날 사면 들고 갈 수 없어요.</li>
+        <li><b>유통기한</b>: 편의점 디저트·샌드위치는 당일, 도쿄바나나·생과자는 약 1주, 만주류는 약 2주예요.</li>
+        <li><b>초콜릿</b>: 여름철에는 아이스팩과 함께, 에어컨 바람이 닿는 곳에 두세요.</li>
+        <li><b>결제</b>: 대부분 현금·신용카드·교통카드(Suica 등) 모두 됩니다. 130엔 커피도 카드로 결제돼요.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>📷 사진·가격 안내</h3>
+      <p>제품 사진과 이름은 각 브랜드 공식 사이트(세븐일레븐·패밀리마트·로손·칼디커피팜·이토큐에몬·가네후쿠·이시야 등)의 실제 상품 정보에서 가져왔어요. 가격은 2026년 11월 기준 세금 포함 매장가이며, 지역·매장·시기에 따라 달라질 수 있습니다. '약'으로 표시한 가격은 대표 용량 기준입니다.</p>
+      <p class="hint">오프라인에서도 열리도록 앱을 홈 화면에 추가해 두면 편해요 (삼성 인터넷 · 크롬 · 사파리 모두 지원).</p>
+    </div>
+  </section>
+</main>
+
+<nav class="tabbar" role="tablist">
+  <button id="tab-dex" role="tab" aria-selected="true"><span class="e">🏪</span>도감</button>
+  <button id="tab-cart" role="tab" aria-selected="false"><span class="e">🛒</span>살 것<span class="badge" id="cartBadge">0</span></button>
+  <button id="tab-info" role="tab" aria-selected="false"><span class="e">✈️</span>여행 팁</button>
+</nav>
+
+<div class="sheet-wrap" id="sheetWrap" aria-hidden="true">
+  <div class="backdrop" id="backdrop"></div>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="shTitle">
+    <div class="grab"></div>
+    <button class="x" id="sheetClose" aria-label="닫기">✕</button>
+    <div class="sheet-scroll" id="sheetBody"></div>
+    <div class="sheet-foot"><button class="add" id="sheetAdd">🛒 살 것 담기</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const ITEMS = [{"id":"sej_nanachiki","cat":"conv","ko":"나나치킨","ja":"ななチキ","price":"232엔","num":232,"tags":["세븐일레븐"],"city":"","reason":"세븐일레븐 치킨의 대표 주자예요. 닭다리살을 두툼하게 튀겨 안이 촉촉하고, 한 손에 들고 먹기 좋아요. 아이 간식으로 가장 실패가 적은 선택입니다.","tip":"계산할 때 「따뜻하게 데워 주세요(あたためてください)」라고 하면 갓 튀긴 느낌으로 받을 수 있어요.","caution":"저녁 시간대에는 품절되기 쉬워요. 매장마다 튀김 상태가 조금씩 다릅니다.","img":"assets/items/sej_nanachiki.jpg"},{"id":"sej_kinno_shokupan","cat":"conv","ko":"황금 식빵","ja":"７ＰＧ 金の食パン 4枚","price":"318엔","num":318,"tags":["세븐일레븐"],"city":"","reason":"세븐 프리미엄(PB) 식빵 중 가장 유명한 '금(金)의 식빵'. 우유와 버터가 넉넉히 들어가 결이 고르고 촉촉해요.","tip":"그대로 먹어도 좋지만 토스터에 구우면 겉은 바삭하고 속은 쫀득해져요.","caution":"유통기한이 2~3일로 짧아요. 여행 마지막 날 사면 다음 날 아침까지만 괜찮습니다.","img":"assets/items/sej_kinno_shokupan.jpg"},{"id":"sej_shiromochi_taiyaki","cat":"conv","ko":"시로모치 타이야키 커스터드","ja":"７プレミアム しろもちたい焼き カスタードクリーム","price":"168엔","num":168,"tags":["세븐일레븐"],"city":"","reason":"붕어빵인데 반죽이 찹쌀처럼 쫀득해요. 안에는 커스터드가 가득 들어 있어 아이들이 특히 좋아합니다.","tip":"전자레인지에 10초만 데우면 커스터드가 흘러나올 만큼 부드러워져요.","caution":"데운 직후 크림이 뜨거워요. 아이에게는 한 김 식혀서 주세요.","img":"assets/items/sej_shiromochi_taiyaki.jpg"},{"id":"sej_nama_donut","cat":"conv","ko":"생도넛 (휘핑&앙금)","ja":"生ドーナツ（ホイップ＆こしあん）","price":"168엔","num":168,"tags":["세븐일레븐"],"city":"","reason":"겉은 살짝 바삭하고 속은 촉촉한 '생도넛'에 휘핑크림과 팥앙금을 채웠어요. 168엔에 이 정도 퀄리티면 가성비가 좋습니다.","tip":"세븐카페 우유와 같이 먹으면 단맛이 부드러워져요.","caution":"크림이 들어 있어 상온에 오래 두면 안 됩니다. 사면 바로 드세요.","img":"assets/items/sej_nama_donut.jpg"},{"id":"sej_purin_bar","cat":"conv","ko":"이탈리안 푸딩 아이스바","ja":"７プレミアム イタリアンプリンアイスバー","price":"298엔","num":298,"tags":["세븐일레븐"],"city":"","reason":"진한 푸딩 맛을 그대로 얼린 아이스바예요. 달걀과 캐러멜 맛이 진해서 아이들이 좋아하고, 4개입이라 가족이 나눠 먹기 좋아요.","tip":"먹기 5분 전에 꺼내 두면 가장 부드러운 식감이 돼요.","caution":"더운 날엔 금방 녹아요. 이동할 때는 아이스팩과 함께 두세요.","img":"assets/items/sej_purin_bar.jpg"},{"id":"sej_menchi_sand","cat":"conv","ko":"멘치카츠 샌드위치","ja":"メンチカツサンド","price":"340엔","num":340,"tags":["세븐일레븐"],"city":"","reason":"두툼한 멘치카츠에 양배추와 소스를 넣은 든든한 샌드위치. 이동 중 한 끼를 때우기 좋아요.","tip":"데우지 말고 그대로 먹어야 빵이 눅눅해지지 않아요.","caution":"소스 맛이 진해요. 아이와 함께라면 물이나 음료를 챙기세요.","img":"assets/items/sej_menchi_sand.jpg"},{"id":"sej_shortcake","cat":"conv","ko":"스틱 쇼트케이크 초콜릿","ja":"７プレミアム スティックショートケーキ ショコラ","price":"180엔","num":180,"tags":["세븐일레븐"],"city":"","reason":"한 손에 쏙 들어오는 스틱 케이크예요. 초콜릿 크림이 진하고 180엔이라 부담 없이 하나 더 사게 됩니다.","tip":"차갑게 먹으면 크림이 단단해져 더 맛있어요.","caution":"초콜릿이 녹기 쉬워요. 여름에는 아이스팩을 함께 두세요.","img":"assets/items/sej_shortcake.jpg"},{"id":"sej_cafe_coffee","cat":"conv","ko":"세븐카페 핫커피 R","ja":"セブンカフェ ホットコーヒーＲ","price":"130엔","num":130,"tags":["세븐일레븐"],"city":"","reason":"130엔에 마시는 세븐일레븐 셀프 커피예요. 여행 중 아침을 가장 싸게 여는 방법입니다.","tip":"컵을 먼저 계산한 뒤 카운터 옆 머신에 컵을 넣고 버튼을 누르면 돼요. 뚜껑·설탕·밀크는 옆에 있어요.","caution":"머신은 계산이 끝나야 작동해요. 컵을 사기 전에는 뽑히지 않습니다.","img":"assets/items/sej_cafe_coffee.jpg"},{"id":"sej_anpan","cat":"conv","ko":"팥앙금 단팥빵","ja":"７プレミアム 北海道産小豆のあんこ 手包みつぶあんぱん","price":"208엔","num":208,"tags":["세븐일레븐"],"city":"","reason":"홋카이도산 팥을 손으로 감싸 구운 단팥빵이에요. 팥 알갱이가 살아 있고 단맛이 깔끔합니다.","tip":"따뜻하게 데우면 팥 향이 확 올라와요.","caution":"유통기한이 짧아요. 팥이 달아서 커피나 우유와 함께 드세요.","img":"assets/items/sej_anpan.jpg"},{"id":"fm_famichiki","cat":"conv","ko":"파미치키","ja":"ファミチキ","price":"248엔","num":248,"tags":["패밀리마트"],"city":"","reason":"패밀리마트의 상징 같은 치킨이에요. 닭다리살을 두툼하게 튀겨 육즙이 많고, 편의점 치킨 비교의 기준이 됩니다.","tip":"카운터에서 데워 달라고 할 수 있어요. 아이가 먹을 땐 반으로 갈라 김을 빼 주세요.","caution":"기름이 많아요. 봉투에 키친타월을 한 장 받으면 좋습니다.","img":"assets/items/fm_famichiki.jpg"},{"id":"fm_sfure_purin","cat":"conv","ko":"스푸레 푸딩","ja":"スフレ・プリン","price":"360엔","num":360,"tags":["패밀리마트"],"city":"","reason":"아래는 푸딩, 위는 슈폐(가벼운 스펀지)인 2층 디저트예요. 패밀리마트 디저트 가운데 가장 인기 있는 품목입니다.","tip":"숟가락을 깊게 넣어 두 층을 한 번에 떠야 제맛이에요.","caution":"흔들면 모양이 무너져요. 가방에 넣을 땐 눕히지 마세요.","img":"assets/items/fm_sfure_purin.jpg"},{"id":"fm_retro_purin","cat":"conv","ko":"찻집의 레트로 푸딩","ja":"喫茶店のレトロプリン","price":"190엔","num":190,"tags":["패밀리마트"],"city":"","reason":"옛날 일본 찻집 푸딩 그대로예요. 요즘 푸딩보다 단단하고, 쓴맛 나는 캐러멜이 포인트입니다.","tip":"캐러멜을 위에 부어 먹는 타입이에요. 컵을 살짝 눌러 빼면 모양이 예쁘게 나옵니다.","caution":"190엔이지만 양이 적어요. 아이와 나눠 먹기엔 조금 아쉬울 수 있습니다.","img":"assets/items/fm_retro_purin.jpg"},{"id":"fm_cream_pan","cat":"conv","ko":"차가운 크림빵 커스터드","ja":"冷やして食べるとろけるくりーむパン カスタード","price":"280엔","num":280,"tags":["패밀리마트"],"city":"","reason":"차갑게 먹는 크림빵이에요. 빵이 부드럽고 커스터드가 진해서 디저트처럼 먹을 수 있습니다.","tip":"매장 냉장 코너에서 바로 사서 먹을 때가 가장 맛있어요.","caution":"차가운 상품이라 실온에 오래 두면 크림이 상해요.","img":"assets/items/fm_cream_pan.jpg"},{"id":"fm_double_shu","cat":"conv","ko":"크림 듬뿍 더블슈","ja":"クリームたっぷり！ダブルシュー","price":"199엔","num":199,"tags":["패밀리마트"],"city":"","reason":"휘핑크림과 커스터드 두 가지가 들어간 슈예요. 199엔에 이 부피라 아이 간식으로 가성비가 좋습니다.","tip":"냉동실에 5분 넣으면 아이스크림 슈 같은 식감이 돼요.","caution":"크림이 넘쳐 손에 묻어요. 냅킨을 꼭 챙기세요.","img":"assets/items/fm_double_shu.jpg"},{"id":"fm_triangle_cheese","cat":"conv","ko":"사각 치즈케이크","ja":"サクッと三角チーズケーキ（プレーン）","price":"278엔","num":278,"tags":["패밀리마트"],"city":"","reason":"삼각형으로 잘라 낸 치즈케이크예요. 진한 치즈 풍미에 크기도 딱 좋아 커피와 잘 맞습니다.","tip":"홍차나 커피와 함께 먹으면 카페 디저트가 돼요.","caution":"부스러기가 많이 떨어져요. 봉투째 받아 먹는 게 편합니다.","img":"assets/items/fm_triangle_cheese.jpg"},{"id":"fm_american_dog","cat":"conv","ko":"아메리칸도그","ja":"アメリカンドッグ","price":"150엔","num":150,"tags":["패밀리마트"],"city":"","reason":"핫케이크 반죽에 소시지를 꽂아 튀긴 아이 간식이에요. 150엔이라 이동 중 허기를 달래기 좋습니다.","tip":"케첩·머스터드 작은 봉지를 같이 달라고 하면 좋아요.","caution":"겉이 뜨거워요. 바로 베어 물면 입천장을 데일 수 있습니다.","img":"assets/items/fm_american_dog.jpg"},{"id":"fm_waffle","cat":"conv","ko":"고집의 와플","ja":"こだわりのワッフル","price":"160엔","num":160,"tags":["패밀리마트"],"city":"","reason":"겉은 바삭하고 속은 쫀득한 와플이에요. 160엔이라 아침 대용이나 간식으로 부담이 없습니다.","tip":"전자레인지에 10~15초 데우면 갓 만든 맛이 나요.","caution":"당이 많아요. 아이가 한 번에 두 개를 먹지 않게 해 주세요.","img":"assets/items/fm_waffle.jpg"},{"id":"fm_cream_daifuku","cat":"conv","ko":"차가운 크림 대복 커스터드","ja":"冷やして食べるくりーむ大福 カスタード","price":"213엔","num":213,"tags":["패밀리마트"],"city":"","reason":"쫀득한 찹쌀떡 안에 커스터드 크림을 넣었어요. 아이들이 좋아하는 식감이라 여행 중 간식으로 인기가 많습니다.","tip":"차갑게 먹으면 크림이 꼬소하고 떡이 더 쫀득해져요.","caution":"떡이라 목에 걸릴 수 있어요. 어린아이에게는 작게 잘라 주세요.","img":"assets/items/fm_cream_daifuku.jpg"},{"id":"lw_karaagekun","cat":"conv","ko":"가라아게쿤","ja":"からあげクン レギュラー","price":"288엔","num":288,"tags":["로손"],"city":"","reason":"로손의 국민 간식이에요. 한입 크기 닭튀김 5개입으로, 레귤러·레드·치즈 등 맛이 계속 바뀌어 골라 먹는 재미가 있습니다.","tip":"카운터에서 데워 달라고 하면 방금 튀긴 걸 받을 수 있어요.","caution":"맛별로 매운 정도가 달라요. 아이에게는 레귤러가 안전합니다.","img":"assets/items/lw_karaagekun.jpg"},{"id":"lw_premium_roll","cat":"conv","ko":"프리미엄 롤케이크","ja":"盛りすぎ！プレミアムロールケーキ","price":"214엔","num":214,"tags":["로손"],"city":"","reason":"로손 우치카페의 대표 롤케이크예요. 크림을 '너무 많이 넣었다(盛りすぎ)'는 이름처럼 크림이 듬뿍 들어 있습니다.","tip":"숟가락으로 크림부터 떠 먹는 게 로손식이에요.","caution":"크림이 많아 상온에 30분 이상 두면 안 됩니다.","img":"assets/items/lw_premium_roll.jpg"},{"id":"lw_baschee","cat":"conv","ko":"바스치","ja":"バスチー‐バスク風チーズケーキ‐","price":"324엔","num":324,"tags":["로손"],"city":"","reason":"바스크 지방 스타일로 겉을 진하게 태운 치즈케이크예요. 겉은 쌉싸름하고 속은 촉촉해 커피와 잘 맞습니다.","tip":"차갑게 먹어야 맛있어요. 사자마자 냉장 보관하세요.","caution":"진하고 달아서 한 번에 다 먹기엔 부담이에요. 나눠 먹기 좋습니다.","img":"assets/items/lw_baschee.jpg"},{"id":"lw_custard_daifuku","cat":"conv","ko":"카스타드 대복","ja":"Uchi Café×八天堂 カスタード大福","price":"225엔","num":225,"tags":["로손"],"city":"","reason":"크림빵으로 유명한 하치텐도와 로손이 함께 만든 커스터드 대복이에요. 떡과 커스터드 조합이 의외로 잘 어울립니다.","tip":"차갑게 식혀 먹으면 크림이 꼬소하고 떡이 쫀득해져요.","caution":"떡이라 아이에게는 잘게 나눠 주세요.","img":"assets/items/lw_custard_daifuku.jpg"},{"id":"lw_lchicken","cat":"conv","ko":"L치킨","ja":"Ｌチキ レギュラー","price":"248엔","num":248,"tags":["로손"],"city":"","reason":"가라아게쿤보다 큰 닭다리살 통튀김이에요. 한 손에 들고 걸으면서 먹기 좋아 이동 중 간식으로 인기입니다.","tip":"레몬 후추를 뿌리면 느끼함이 줄어요.","caution":"기름이 많아 봉투에 기름이 배요. 냅킨을 함께 받으세요.","img":"assets/items/lw_lchicken.jpg"},{"id":"lw_doramocchi","cat":"conv","ko":"도라모치 팥&휘핑","ja":"どらもっち あんこ＆ホイップ","price":"214엔","num":214,"tags":["로손"],"city":"","reason":"도라야키인데 반죽이 떡처럼 쫀득해요. 팥과 휘핑크림이 함께 들어 있어 아이 입맛에 잘 맞습니다.","tip":"따뜻하게 데우면 떡 반죽이 더 부드러워져요.","caution":"떡 반죽이라 천천히 먹여야 해요.","img":"assets/items/lw_doramocchi.jpg"},{"id":"lw_onigiri_sake","cat":"conv","ko":"큰 주먹밥 연어","ja":"大きなおにぎり 鮭","price":"308엔","num":308,"tags":["로손"],"city":"","reason":"주먹밥 하나가 300엔대인 대형 사이즈예요. 기차나 비행기 타기 전 식사로 든든합니다.","tip":"김은 먹기 직전에 붙여야 바삭함이 살아요.","caution":"밥이라 당일 안에 먹어야 해요.","img":"assets/items/lw_onigiri_sake.jpg"},{"id":"lw_custard_eclair","cat":"conv","ko":"커스타드 에클레어","ja":"カスタードエクレア","price":"189엔","num":189,"tags":["로손"],"city":"","reason":"바삭한 슈 위에 초콜릿을 입히고 속은 커스터드로 채운 기본 디저트예요. 로손 디저트의 기본기를 보여 줍니다.","tip":"차갑게 먹으면 초콜릿이 딱 붙어 식감이 좋아요.","caution":"초콜릿이 손에 묻어요. 냅킨을 챙기세요.","img":"assets/items/lw_custard_eclair.jpg"},{"id":"kaldi_maple_spread","cat":"brand","ko":"메이플 스프레드","ja":"デカセール メープルスプレッド 160g","price":"999엔","num":999,"tags":["칼디"],"city":"","reason":"메이플시럽을 졸여 만든 메이플 버터예요. 빵이나 팬케이크에 바르면 집에서도 카페 브런치 맛이 납니다.","tip":"따뜻한 토스트에 바르면 녹아서 빵 속으로 스며들어요.","caution":"병 제품이라 기내 반입 시 액체 취급을 받을 수 있어요. 위탁 수하물을 권합니다.","img":"assets/items/kaldi_maple_spread.jpg"},{"id":"kaldi_nutte_melon","cat":"brand","ko":"발라서 구우면 메론빵","ja":"ぬって焼いたらメロンパン 110g","price":"367엔","num":367,"tags":["칼디"],"city":"","reason":"식빵에 발라 굽기만 하면 메론빵이 되는 스프레드예요. 아이가 신기해하고 직접 발라 먹는 재미가 있습니다.","tip":"식빵에 바르고 토스터에 2~3분만 구우면 돼요.","caution":"설탕이 많아 금방 타요. 약한 불로 지켜보세요.","img":"assets/items/kaldi_nutte_melon.jpg"},{"id":"kaldi_caramel_cream","cat":"brand","ko":"토로케루 카라멜 크림","ja":"とろけるキャラメルクリーム 150g","price":"494엔","num":494,"tags":["칼디"],"city":"","reason":"이름 그대로 녹아내리는 카라멜 크림이에요. 토스트·아이스크림·과일 어디에나 잘 어울립니다.","tip":"바닐라 아이스크림 위에 한 숟갈 얹으면 디저트가 완성돼요.","caution":"병이라 무겁고 깨질 수 있어요. 캐리어 안쪽에 넣으세요.","img":"assets/items/kaldi_caramel_cream.jpg"},{"id":"kaldi_amaou_butter","cat":"brand","ko":"아마오우 딸기 버터","ja":"あまおう苺バター 145g","price":"699엔","num":699,"tags":["칼디"],"city":"","reason":"후쿠오카 명품 딸기 '아마오우'로 만든 딸기 버터예요. 딸기 향이 진하고 색도 예뻐서 선물용으로도 좋습니다.","tip":"크루아상에 발라 먹으면 카페에서 먹는 맛이 나요.","caution":"냉장 보관이지만 기내 반입은 위탁 수하물로 하세요.","img":"assets/items/kaldi_amaou_butter.jpg"},{"id":"kaldi_hazelnut","cat":"brand","ko":"헤이즐넛 초콜릿 스프레드","ja":"レペラ ヘーゼルナッツチョコスプレッド 180g","price":"354엔","num":354,"tags":["칼디"],"city":"","reason":"헤이즐넛이 들어간 초콜릿 스프레드예요. 누텔라 계열을 좋아하는 아이에게 딱 맞습니다.","tip":"바나나에 찍어 먹이면 간식이 바로 완성돼요.","caution":"뚜껑이 헐거우면 가방에서 새요. 비닐 팩에 한 번 더 넣으세요.","img":"assets/items/kaldi_hazelnut.jpg"},{"id":"kaldi_coffee_whip","cat":"brand","ko":"커피 휘프 크림","ja":"コーヒーホイップクリーム イタリアンロースト 110g","price":"367엔","num":367,"tags":["칼디"],"city":"","reason":"이탈리안 로스트 커피 향이 나는 휘프 크림이에요. 커피를 좋아하는 어른을 위한 스프레드입니다.","tip":"식빵에 바르고 구우면 커피 향이 부엌에 퍼져요.","caution":"커피 향이 강해 아이 입맛에는 맞지 않을 수 있어요.","img":"assets/items/kaldi_coffee_whip.jpg"},{"id":"drug_kyusoku","cat":"brand","ko":"휴족시간 발 시트","ja":"休足時間 足すっきりシート 6枚入","price":"396엔","num":396,"tags":["드럭스토어"],"city":"","reason":"하루 종일 걸은 뒤 다리에 붙이는 냉각 시트예요. 여행 마지막 날 다리 붓기를 풀어 주는 필수품입니다.","tip":"숙소 냉장고에 넣었다가 붙이면 훨씬 시원해요.","caution":"상처·습진이 있는 부위에는 붙이지 마세요. 아이 피부에는 짧게만 사용하세요.","img":"assets/items/drug_kyusoku.jpg"},{"id":"drug_megrhythm","cat":"brand","ko":"메구리즘 증기 핫 아이마스크","ja":"めぐりズム 蒸気でホットアイマスク 12枚入","price":"1,250엔","num":1250,"tags":["드럭스토어"],"city":"","reason":"약 40℃ 증기로 눈을 20분간 데워 주는 온열 마스크예요. 비행기나 신칸센에서 특히 인기 있습니다.","tip":"잠들기 전에 쓰면 다음 날 눈이 가볍게 느껴져요.","caution":"눈 화장을 한 상태로 쓰면 화장이 지워질 수 있어요.","img":"assets/items/drug_megrhythm.jpg"},{"id":"drug_miffy_mask","cat":"brand","ko":"미피 핫 아이마스크","ja":"ミッフィーホットアイマスク 3枚","price":"748엔","num":748,"tags":["드럭스토어"],"city":"","reason":"미피 얼굴이 그려진 온열 아이마스크 3매입이에요. 기차에서 심심해하는 아이에게 쓰게 하면 낮잠 시간이 됩니다.","tip":"3매라 체험용으로 딱 좋아요. 아이 낮잠 시간에 맞춰 주세요.","caution":"온열 제품이라 아이 혼자 쓰지 않게 하고, 부모가 온도를 확인해 주세요.","img":"assets/items/drug_miffy_mask.jpg"},{"id":"drug_ryukakusan","cat":"brand","ko":"류카쿠산 노도아메","ja":"龍角散ののどすっきり飴 袋","price":"302엔","num":302,"tags":["드럭스토어"],"city":"","reason":"일본 약국을 대표하는 목 캔디예요. 한약 같은 청량감이 강해 목이 칼칼할 때 확실히 시원해집니다.","tip":"기내처럼 건조한 곳에서 하나씩 물지 않고 녹여 먹으면 좋아요.","caution":"청량감이 강해요. 초2 아이에게는 반으로 나눠 주세요.","img":"assets/items/drug_ryukakusan.jpg"},{"id":"kids_umaibo","cat":"kids","ko":"우마이보 콘포타주","ja":"うまい棒 コーンポタージュ味","price":"약 15엔~","num":null,"tags":["과자"],"city":"","reason":"일본 아이들의 국민 과자예요. 한 개 10~20엔대라 편의점에서 여러 개 골라 사는 재미가 있습니다.","tip":"콘포타주·타코야키·치즈 맛을 섞어 사면 아이가 골라 먹어요.","caution":"부스러기가 많고 손에 묻어요. 물티슈를 챙기세요.","img":"assets/items/kids_umaibo.jpg"},{"id":"kids_koala","cat":"kids","ko":"코아라노마치 초코","ja":"コアラのマーチ＜チョコ＞","price":"약 200엔","num":200,"tags":["과자"],"city":"","reason":"비스킷에 코알라 그림이 그려진 초콜릿 과자예요. 그림을 찾으며 먹는 재미가 있어 아이가 오래 집중합니다.","tip":"봉투 뒷면의 그림 설명을 함께 읽으면 놀이가 됩니다.","caution":"한 봉지 48g에 252kcal예요. 하루 한 봉지가 적당합니다.","img":"assets/items/kids_koala.jpg"},{"id":"kids_tabekko","cat":"kids","ko":"타베코도부츠","ja":"たべっ子どうぶつ","price":"약 200엔","num":200,"tags":["과자"],"city":"","reason":"동물 모양 비스킷이에요. 동물 이름이 영어로 적혀 있어 아이와 놀며 먹기 좋습니다.","tip":"'이건 무슨 동물?' 놀이를 하면 이동 시간이 금방 지나가요.","caution":"부스러기가 많아요. 차 안에서 먹으면 난리가 납니다.","img":"assets/items/kids_tabekko.jpg"},{"id":"kids_tomica","cat":"kids","ko":"토미카 (미니카)","ja":"トミカ No.1 日産スカイラインGT-R パトロールカー","price":"594엔","num":594,"tags":["장난감"],"city":"","reason":"일본 미니카의 정석이에요. 편의점·완구점·공항 어디서나 594엔에 살 수 있어 선물로 가장 실패가 적습니다.","tip":"공항과 역 완구점에는 한정판 토미카가 있어요. 아이 선물로 최고.","caution":"대상 연령 3세 이상이에요. 작은 부품을 삼키지 않게 하세요.","img":"assets/items/kids_tomica.jpg"},{"id":"kids_tirol_kirby","cat":"kids","ko":"치로루초코 커비 BOX","ja":"星のカービィチロルチョコBOX","price":"324엔","num":324,"tags":["과자"],"city":"","reason":"커비 디자인 상자에 치로루초코가 들어 있어요. 일본 한정 콜라보가 많아 기념품으로도 좋습니다.","tip":"캐릭터 콜라보는 시기를 타요. 마음에 들면 그 자리에서 사 두세요.","caution":"여름에는 초콜릿이 녹아요. 아이스팩과 함께 두세요.","img":"assets/items/kids_tirol_kirby.jpg"},{"id":"kids_pokemon_banana","cat":"kids","ko":"피카츄 도쿄바나나","ja":"ピカチュウ東京ばな奈「見ぃつけたっ」4個入","price":"842엔 (4개입)","num":842,"tags":["도쿄"],"city":"도쿄","reason":"도쿄바나나에 피카츄 얼굴을 새겨 구운 한정판이에요. 어떤 피카츄 무늬가 들어 있는지 랜덤이라 상자를 열 때부터 즐겁습니다.","tip":"도쿄역·하네다공항 매장에서 살 수 있어요. 무늬는 6종 중 하나가 랜덤으로 들어 있습니다.","caution":"유통기한이 약 1주로 짧아요. 4개입은 낱개 포장이 아니라 열면 바로 먹는 게 좋습니다.","img":"assets/items/kids_pokemon_banana.jpg"},{"id":"kids_meiji_gumi","cat":"kids","ko":"메이지 카주구미 포도","ja":"果汁グミ ぶどう 54g","price":"161엔","num":161,"tags":["과자"],"city":"","reason":"과즙을 그대로 굳힌 쫀득한 구미예요. 냄새가 적고 손에 잘 묻지 않아 기내 간식으로 최고입니다.","tip":"비행기 이륙·착륙 때 귀가 먹먹할 때 씹으면 도움이 돼요.","caution":"젤라틴이 들어 있어 알레르기 표시를 확인하세요.","img":"assets/items/kids_meiji_gumi.jpg"},{"id":"kids_bisco","cat":"kids","ko":"글리코 비스코","ja":"ビスコ","price":"177엔","num":177,"tags":["과자"],"city":"","reason":"크림을 넣은 비스킷이에요. 일본 아이들 간식의 기본으로, 작아서 가방에 넣고 다니기 좋습니다.","tip":"낱개 포장이라 형제·친구와 나눠 주기 좋아요.","caution":"밀·유 알레르기가 있으면 피하세요.","img":"assets/items/kids_bisco.jpg"},{"id":"city_tokyo_banana","cat":"city","ko":"도쿄바나나","ja":"東京ばな奈「見ぃつけたっ」","price":"약 1,080엔 (8개입)","num":1080,"tags":["도쿄"],"city":"도쿄","reason":"도쿄 기념품의 대명사예요. 바나나 커스터드 크림을 넣은 푹신한 케이크로, 한국인 여행자 구매 1위 품목입니다.","tip":"하네다·나리타 공항 출국장에서도 살 수 있어요. 짐이 많으면 공항에서 사세요.","caution":"유통기한이 약 7일이고 눌리면 모양이 찌그러져요. 가방 맨 위에 두세요.","img":"assets/items/city_tokyo_banana.jpg"},{"id":"city_hiyoko","cat":"city","ko":"명과 히요코","ja":"名菓ひよ子","price":"994엔 (5개입)","num":994,"tags":["도쿄","후쿠오카"],"city":"도쿄","reason":"병아리 모양 만주예요. 1912년부터 이어져 온 일본 기념품의 고전으로, 도쿄역과 하카타역 어디서나 살 수 있습니다.","tip":"도쿄에서는 '도쿄 히요코', 후쿠오카에서는 '히요코'로 팔아요. 어느 도시에서 사도 같은 맛입니다.","caution":"껍질이 부드러워 눌리면 부서져요. 단단한 물건 옆에 두지 마세요.","img":"assets/items/city_hiyoko.jpg"},{"id":"city_551_butaman","cat":"city","ko":"551 부타만","ja":"豚まん","price":"500엔 (2개입)","num":500,"tags":["오사카"],"city":"오사카","reason":"오사카 난바 551蓬莱의 돼지고기 찐빵이에요. 줄을 서서 사 먹는 오사카 명물로, 한국인 여행자 필수 코스입니다.","tip":"매장에서 갓 쪄 낸 걸 받아 바로 먹는 게 제일 맛있어요. 겨자 작은 봉지도 챙기세요.","caution":"아주 뜨거워요. 아이에게는 반으로 갈라 김을 빼고 주세요.","img":"assets/items/city_551_butaman.jpg"},{"id":"city_551_shumai","cat":"city","ko":"551 슈마이","ja":"焼売","price":"약 400엔~","num":400,"tags":["오사카"],"city":"오사카","reason":"551蓬莱의 또 하나의 명물인 돼지고기 슈마이예요. 부타만과 함께 사서 숙소에서 먹으면 오사카 저녁이 됩니다.","tip":"부타만과 세트로 사는 사람이 많아요. 전자레인지로 데워 먹으면 좋습니다.","caution":"차게 식으면 맛이 떨어져요. 사 온 날 안에 드세요.","img":"assets/items/city_551_shumai.jpg"},{"id":"city_rikuro","cat":"city","ko":"리쿠로 할아버지의 치즈케이크","ja":"焼きたてチーズケーキ","price":"1,095엔","num":1095,"tags":["오사카"],"city":"오사카","reason":"오사카 난바에서 줄 서서 사는 갓 구운 치즈케이크예요. 폭신한 식감과 은은한 치즈 맛으로 유명합니다.","tip":"갓 구운 걸 받으면 상자 뚜껑을 열어 김을 빼야 눅눅해지지 않아요.","caution":"상온에서 하루 안에 먹어야 해요. 숙소 도착 후 바로 드세요.","img":"assets/items/city_rikuro.jpg"},{"id":"city_kyobaum","cat":"city","ko":"쿄바움","ja":"京ばあむ","price":"1,663엔","num":1663,"tags":["교토"],"city":"교토","reason":"우지 말차와 두유로 만든 바움쿠헨이에요. 교토에서만 살 수 있고, 초콜릿 코팅에 말차 향이 진합니다.","tip":"얇게 썰어 따뜻한 차와 함께 먹으면 교토 찻집 기분이 나요.","caution":"여름에는 초콜릿 코팅이 녹아요. 아이스팩을 함께 두세요.","img":"assets/items/city_kyobaum.jpg"},{"id":"city_ito_senbei","cat":"city","ko":"우지 말차 센베이 우스하미도리","ja":"宇治抹茶せんべい うす葉みどり 24枚入","price":"990엔","num":990,"tags":["교토"],"city":"교토","reason":"우지 말차 향이 진한 얇은 센베이예요. 2장씩 개별 포장이라 회사·친구에게 나눠 주기 좋습니다.","tip":"녹차는 물론 커피와도 잘 맞아요. 짭짤한 과자 사이에 두면 좋은 휴식이 됩니다.","caution":"부서지기 쉬워요. 캐리어 맨 위, 옷 사이에 넣으세요.","img":"assets/items/city_ito_senbei.jpg"},{"id":"city_torimon","cat":"city","ko":"하카타 토리몬","ja":"博多通りもん","price":"1,500엔 (8개입)","num":1500,"tags":["후쿠오카"],"city":"후쿠오카","reason":"후쿠오카 기념품 판매 1위 만주예요. 버터 향이 나는 밀크 피부에 부드러운 흰 앙금이 들어 있습니다.","tip":"후쿠오카 공항과 하카타역에서 살 수 있어요. 비행기 타기 전 마지막 쇼핑으로 좋습니다.","caution":"유통기한이 약 2주예요. 더운 날 초콜릿 과자와 함께 두면 눅눅해집니다.","img":"assets/items/city_torimon.jpg"},{"id":"city_mentaiko","cat":"city","ko":"가네후쿠 명란 (기레코)","ja":"辛子明太子 徳用(切子) 300g","price":"2,200엔","num":2200,"tags":["후쿠오카"],"city":"후쿠오카","reason":"후쿠오카 명물 명란젓이에요. '기레코(切子)'는 모양만 흐트러진 것이라 맛은 같고 가격이 훨씬 착합니다.","tip":"숙소 아침밥에 따뜻한 밥과 함께. 냉장 보관은 필수예요.","caution":"냉장 식품이라 비행기 기내 반입과 위탁이 모두 안 됩니다. 여행 마지막 날 사면 들고 갈 수 없어요.","img":"assets/items/city_mentaiko.jpg"},{"id":"city_beniimo","cat":"city","ko":"홍이모 타르트","ja":"元祖紅いもタルト","price":"약 1,000엔 (8개입)","num":1000,"tags":["오키나와"],"city":"오키나와","reason":"오키나와 자색고구마로 만든 타르트예요. 40년 넘게 오키나와 기념품 1위 자리를 지키고 있습니다.","tip":"차갑게 먹으면 더 맛있어요. 숙소 냉장고에 넣어 두세요.","caution":"타르트가 부서지기 쉬워요. 손가방에 넣지 말고 쇼핑백째 들고 다니세요.","img":"assets/items/city_beniimo.jpg"},{"id":"city_shiroi_koibito","cat":"city","ko":"시로이 코이비토","ja":"白い恋人 6枚入","price":"572엔","num":572,"tags":["삿포로"],"city":"삿포로","reason":"홋카이도를 대표하는 과자예요. 랑그드샤 쿠키에 흰 초콜릿을 넣은 조합으로, 삿포로 여행의 기본 기념품입니다.","tip":"삿포로·신치토세 공항은 물론 도쿄 등 전국 기념품점에서도 팔아요. 짐이 많으면 공항에서 사세요.","caution":"여름에는 초콜릿이 녹아요. 아이스팩을 함께 두고 서늘한 곳에 보관하세요.","img":"assets/items/city_shiroi_koibito.jpg"},{"id":"city_royce_matcha","cat":"city","ko":"로이즈 말차 생초콜릿","ja":"ロイズ 生チョコレート[抹茶]","price":"약 780엔","num":780,"tags":["삿포로"],"city":"삿포로","reason":"홋카이도 로이즈의 생초콜릿이에요. 입에 넣으면 녹는 식감과 진한 말차 맛으로 한국인에게도 인기가 많습니다.","tip":"차갑게 유지해야 제맛이에요. 아이스팩과 함께 숙소 냉장고에 넣으세요.","caution":"상온에 30분만 두어도 녹아요. 사 온 날 바로 냉장 보관하세요.","img":"assets/items/city_royce_matcha.jpg"}];
+const TAGS = ["세븐일레븐", "패밀리마트", "로손", "칼디", "드럭스토어", "과자", "장난감", "도쿄", "후쿠오카", "오사카", "교토", "오키나와", "삿포로"];
+const CATS = [["all","전체","🍱"],["conv","편의점","🏪"],["brand","식료품·브랜드","🛍"],["kids","아이·선물","👦"],["city","도시 명물","🗾"]];
+const CAT_LABEL = {conv:"편의점",brand:"식료품·브랜드",kids:"아이·선물",city:"도시 명물"};
+const KEY = "japanShopping.v1";
+
+const $ = (s)=>document.querySelector(s);
+const el = (t,c)=>{const n=document.createElement(t); if(c) n.className=c; return n;};
+
+/* ── state ── */
+let cart = [];
+try{ const raw = localStorage.getItem(KEY); if(raw) cart = JSON.parse(raw).filter(id=>ITEMS.some(i=>i.id===id)); }catch(e){}
+const save = ()=>{ try{ localStorage.setItem(KEY, JSON.stringify(cart)); }catch(e){} };
+let state = { cat:"all", tag:"all", q:"", view:"dex" };
+let current = null;
+
+/* ── filters ── */
+function buildChips(){
+  const cc = $("#catChips"); cc.innerHTML="";
+  CATS.forEach(([v,label,emoji])=>{
+    const b = el("button","chip");
+    b.type="button"; b.dataset.cat=v; b.innerHTML = emoji+" "+label;
+    b.setAttribute("aria-pressed", String(state.cat===v));
+    b.onclick = ()=>{ state.cat=v; state.tag="all"; buildChips(); render(); };
+    cc.appendChild(b);
+  });
+  const tc = $("#tagChips"); tc.innerHTML="";
+  const all = el("button","chip small"); all.type="button"; all.textContent="도시·매장 전체";
+  all.setAttribute("aria-pressed", String(state.tag==="all"));
+  all.onclick = ()=>{ state.tag="all"; buildChips(); render(); };
+  tc.appendChild(all);
+  TAGS.forEach(t=>{
+    const b = el("button","chip small"); b.type="button"; b.textContent=t;
+    b.setAttribute("aria-pressed", String(state.tag===t));
+    b.onclick = ()=>{ state.tag = (state.tag===t? "all" : t); buildChips(); render(); };
+    tc.appendChild(b);
+  });
+}
+
+function matches(it){
+  if(state.cat!=="all" && it.cat!==state.cat) return false;
+  if(state.tag!=="all" && !it.tags.includes(state.tag)) return false;
+  const q = state.q.trim().toLowerCase();
+  if(!q) return true;
+  const hay = [it.ko,it.ja,it.price,it.reason,it.tip,it.caution,it.city,CAT_LABEL[it.cat],...it.tags].join(" ").toLowerCase();
+  return hay.includes(q);
+}
+
+/* ── render dex ── */
+function render(){
+  const list = ITEMS.filter(matches);
+  const grid = $("#grid"); grid.innerHTML="";
+  $("#shown").textContent = list.length;
+  $("#empty").hidden = list.length>0;
+  const frag = document.createDocumentFragment();
+  list.forEach(it=>{
+    const card = el("article","card"); card.dataset.id=it.id;
+    const thumb = el("div","thumb");
+    const img = el("img"); img.src=it.img; img.alt=it.ko; img.loading="lazy"; img.decoding="async";
+    img.width=300; img.height=300;
+    const pin = el("button","pin"); pin.type="button";
+    pin.setAttribute("aria-pressed", String(cart.includes(it.id)));
+    pin.setAttribute("aria-label", it.ko+" 살 것 담기");
+    pin.textContent = cart.includes(it.id) ? "✓" : "＋";
+    pin.onclick = (ev)=>{ ev.stopPropagation(); toggle(it.id); };
+    thumb.appendChild(img); thumb.appendChild(pin);
+    const body = el("div","body");
+    const h3 = el("h3"); h3.textContent = it.ko;
+    const ja = el("p","ja"); ja.textContent = it.ja;
+    const meta = el("div","meta");
+    const pr = el("span","price"); pr.textContent = it.price;
+    const tg = el("span","tag"); tg.textContent = it.tags[0];
+    meta.appendChild(pr); meta.appendChild(tg);
+    body.appendChild(h3); body.appendChild(ja); body.appendChild(meta);
+    card.appendChild(thumb); card.appendChild(body);
+    card.onclick = ()=>openSheet(it.id);
+    frag.appendChild(card);
+  });
+  grid.appendChild(frag);
+  updateBadge();
+}
+
+function updateBadge(){
+  const b = $("#cartBadge");
+  b.textContent = cart.length;
+  b.classList.toggle("on", cart.length>0);
+}
+
+function toggle(id){
+  const i = cart.indexOf(id);
+  if(i>=0){ cart.splice(i,1); toast("살 것에서 뺐어요"); }
+  else{ cart.push(id); toast("살 것에 담았어요 🛒"); }
+  save(); render(); if(state.view==="cart") renderCart();
+  const pin = document.querySelector('.card[data-id="'+id+'"] .pin');
+  if(pin){ pin.setAttribute("aria-pressed", String(cart.includes(id))); pin.textContent = cart.includes(id)?"✓":"＋"; }
+  if(current===id) updateSheetAdd();
+}
+
+/* ── sheet ── */
+function openSheet(id){
+  const it = ITEMS.find(x=>x.id===id); if(!it) return;
+  current = id;
+  const b = $("#sheetBody"); b.innerHTML="";
+  const hero = el("div","hero"); const img=el("img"); img.src=it.img; img.alt=it.ko; hero.appendChild(img); b.appendChild(hero);
+
+  const tags = el("div","tags");
+  const ct = el("span","tg cat"); ct.textContent = CAT_LABEL[it.cat]; tags.appendChild(ct);
+  it.tags.forEach(t=>{ const s=el("span","tg"); s.textContent=t; tags.appendChild(s); });
+  b.appendChild(tags);
+
+  const h2 = el("h2"); h2.id="shTitle"; h2.textContent = it.ko; b.appendChild(h2);
+
+  const ja = el("div","ja-big");
+  const lbl = el("span","lbl"); lbl.textContent="일본어 이름 · 점원에게 보여 주세요";
+  const txt = el("span"); txt.textContent = it.ja;
+  const cpy = el("button","cpy"); cpy.type="button"; cpy.textContent="복사";
+  cpy.onclick = async ()=>{
+    try{ await navigator.clipboard.writeText(it.ja); toast("일본어 이름을 복사했어요"); }
+    catch(e){ toast("길게 눌러 직접 복사해 주세요"); }
+  };
+  ja.appendChild(lbl); ja.appendChild(txt); ja.appendChild(cpy); b.appendChild(ja);
+
+  const pr = el("p","price-big"); pr.textContent = it.price; b.appendChild(pr);
+
+  const s1 = el("div","sec"); s1.innerHTML = "<h4>💡 왜 좋아요</h4>"; const p1=el("p"); p1.textContent=it.reason; s1.appendChild(p1); b.appendChild(s1);
+  const s2 = el("div","sec"); s2.innerHTML = "<h4>😋 먹는 팁</h4>"; const p2=el("p"); p2.textContent=it.tip; s2.appendChild(p2); b.appendChild(s2);
+  const s3 = el("div","sec warn"); s3.innerHTML = "<h4>⚠️ 주의할 점</h4>"; const p3=el("p"); p3.textContent=it.caution; s3.appendChild(p3); b.appendChild(s3);
+
+  b.scrollTop = 0;
+  updateSheetAdd();
+  const w = $("#sheetWrap");
+  w.classList.add("open");
+  document.body.style.overflow="hidden";
+  requestAnimationFrame(()=>w.classList.add("show"));
+}
+function updateSheetAdd(){
+  const btn = $("#sheetAdd");
+  const on = cart.includes(current);
+  btn.classList.toggle("on", on);
+  btn.textContent = on ? "✓ 살 것에 담김 (누르면 빼기)" : "🛒 살 것 담기";
+}
+function closeSheet(){
+  const w = $("#sheetWrap");
+  w.classList.remove("show");
+  document.body.style.overflow="";
+  setTimeout(()=>{ w.classList.remove("open"); current=null; }, 240);
+}
+
+/* ── cart ── */
+function renderCart(){
+  const sum = $("#cartSum"), body = $("#cartBody");
+  const picked = ITEMS.filter(i=>cart.includes(i.id));
+  const total = picked.reduce((a,b)=>a+(b.num||0),0);
+  const hasNum = picked.some(p=>p.num);
+  sum.innerHTML = "";
+  if(!picked.length){
+    body.innerHTML = '<div class="cart-empty"><div class="big">🛍</div><p>아직 담은 게 없어요.<br>도감에서 살 것을 담아 두면<br>현지에서 하나씩 체크할 수 있어요.</p><button class="btn-primary" id="goDex">도감 보러 가기</button></div>';
+    $("#goDex").onclick = ()=>setView("dex");
+    sum.hidden = true;
+    return;
+  }
+  sum.hidden = false;
+  const left = el("div");
+  const n = el("div","n"); n.innerHTML = picked.length+"<span>개 담음</span>";
+  const tot = el("div","tot"); tot.textContent = hasNum ? "예상 합계 약 "+total.toLocaleString()+"엔" : "가격은 매장에서 확인";
+  left.appendChild(n); left.appendChild(tot);
+  const clr = el("button","clr"); clr.type="button"; clr.textContent="전체 비우기";
+  clr.onclick = ()=>{ if(confirm("담은 것을 모두 비울까요?")){ cart=[]; save(); renderCart(); render(); toast("비웠어요"); } };
+  sum.appendChild(left); sum.appendChild(clr);
+
+  body.innerHTML="";
+  const groups = {};
+  picked.forEach(it=>{ const k = it.tags[0]; (groups[k]=groups[k]||[]).push(it); });
+  Object.keys(groups).forEach(g=>{
+    const wrap = el("div","grp");
+    const h = el("h4"); h.innerHTML = g + ' <span class="cnt">'+groups[g].length+'</span>';
+    wrap.appendChild(h);
+    groups[g].forEach(it=>{
+      const row = el("div","row"+(it._done?" done":""));
+      const cb = el("button","cb"); cb.type="button"; cb.textContent = it._done? "✓" : "";
+      cb.setAttribute("aria-label", it.ko+" 샀어요");
+      cb.onclick = (e)=>{ e.stopPropagation(); it._done = !it._done; saveDone(); renderCart(); };
+      const rt = el("div","rt"); const im=el("img"); im.src=it.img; im.alt=""; im.loading="lazy"; rt.appendChild(im);
+      const tx = el("div","tx");
+      const k = el("div","k"); k.textContent=it.ko;
+      const j = el("div","j"); j.textContent=it.ja;
+      const p = el("div","p"); p.textContent=it.price;
+      tx.appendChild(k); tx.appendChild(j); tx.appendChild(p);
+      const del = el("button","del"); del.type="button"; del.textContent="✕"; del.setAttribute("aria-label", it.ko+" 빼기");
+      del.onclick = ()=>{ cart = cart.filter(x=>x!==it.id); save(); renderCart(); render(); };
+      row.appendChild(cb); row.appendChild(rt); row.appendChild(tx); row.appendChild(del);
+      row.onclick = (e)=>{ if(e.target.closest('.del')) return; it._done = !it._done; saveDone(); renderCart(); };
+      if(it._done) row.classList.add("done");
+      wrap.appendChild(row);
+    });
+    body.appendChild(wrap);
+  });
+  const note = el("p","cart-note");
+  note.textContent = "항목을 누르면 산 것으로 체크돼요 · 체크한 것은 취소선으로 표시됩니다";
+  body.appendChild(note);
+}
+/* 산 것 체크 상태(별도 키) */
+function loadDone(){ try{ const d=JSON.parse(localStorage.getItem(KEY+".done")||"[]"); ITEMS.forEach(i=>i._done=d.includes(i.id)); }catch(e){} }
+function saveDone(){ try{ localStorage.setItem(KEY+".done", JSON.stringify(ITEMS.filter(i=>i._done).map(i=>i.id))); }catch(e){} }
+
+/* ── views ── */
+function setView(v){
+  state.view = v;
+  $("#view-dex").hidden = v!=="dex";
+  $("#view-cart").hidden = v!=="cart";
+  $("#view-info").hidden = v!=="info";
+  document.querySelector(".hdr").classList.toggle("compact", v!=="dex");
+  ["dex","cart","info"].forEach(k=>$("#tab-"+k).setAttribute("aria-selected", String(k===v)));
+  if(v==="cart") renderCart();
+  window.scrollTo({top:0,behavior:"instant"});
+}
+
+/* ── toast ── */
+let tt;
+function toast(msg){
+  const t = $("#toast"); t.textContent = msg; t.classList.add("on");
+  clearTimeout(tt); tt = setTimeout(()=>t.classList.remove("on"), 1700);
+}
+
+/* ── events ── */
+$("#q").addEventListener("input", e=>{
+  state.q = e.target.value;
+  $("#qClear").classList.toggle("on", !!state.q);
+  render();
+});
+$("#qClear").onclick = ()=>{ $("#q").value=""; state.q=""; $("#qClear").classList.remove("on"); render(); $("#q").focus(); };
+$("#sheetClose").onclick = closeSheet;
+$("#backdrop").onclick = closeSheet;
+$("#sheetAdd").onclick = ()=>{ if(current) toggle(current); };
+document.addEventListener("keydown", e=>{ if(e.key==="Escape" && current) closeSheet(); });
+$("#tab-dex").onclick = ()=>setView("dex");
+$("#tab-cart").onclick = ()=>setView("cart");
+$("#tab-info").onclick = ()=>setView("info");
+
+/* swipe-down to close sheet */
+(function(){
+  const sheet = document.querySelector(".sheet");
+  let y0=null, dy=0;
+  sheet.addEventListener("touchstart", e=>{ if(sheet.scrollTop>=0 && e.target.closest(".sheet-scroll") && document.querySelector(".sheet-scroll").scrollTop>0) {y0=null;return;} y0=e.touches[0].clientY; dy=0; }, {passive:true});
+  sheet.addEventListener("touchmove", e=>{ if(y0===null) return; dy = e.touches[0].clientY - y0; if(dy>0){ sheet.style.transform="translateY("+dy+"px)"; } }, {passive:true});
+  sheet.addEventListener("touchend", ()=>{ if(y0===null) return; if(dy>110){ sheet.style.transform=""; closeSheet(); } else { sheet.style.transform=""; } y0=null; });
+})();
+
+/* init */
+loadDone();
+buildChips();
+render();
+renderCart();
+const SW_OK = location.protocol==="https:" || location.hostname==="localhost" || location.hostname==="127.0.0.1";
+if("serviceWorker" in navigator && SW_OK){
+  window.addEventListener("load", ()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+}
+</script>
+</body>
+</html>

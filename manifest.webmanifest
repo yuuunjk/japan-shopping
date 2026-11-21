@@ -1,0 +1,20 @@
+{
+  "name": "일본 편의점 도감 · 살 것 체크",
+  "short_name": "일본 편의점",
+  "description": "일본 편의점·식료품·도시별 추천템 56가지, 실제 제품 사진과 일본어 이름, 살 것 체크리스트",
+  "lang": "ko",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f8f3ea",
+  "theme_color": "#f8f3ea",
+  "categories": ["travel", "shopping", "food"],
+  "icons": [
+    { "src": "app-icon-180.png", "sizes": "180x180", "type": "image/png", "purpose": "any" },
+    { "src": "app-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "app-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "app-icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
